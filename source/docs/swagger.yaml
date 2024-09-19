@@ -140,12 +140,10 @@ paths:
       - description: order
         in: query
         name: order
-        required: true
         type: string
       - description: orderBy
         in: query
         name: orderBy
-        required: true
         type: string
       produces:
       - application/json
@@ -256,12 +254,10 @@ paths:
       - description: order
         in: query
         name: order
-        required: true
         type: string
       - description: orderBy
         in: query
         name: orderBy
-        required: true
         type: string
       - description: ID
         in: path

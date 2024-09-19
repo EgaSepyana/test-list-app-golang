@@ -44,8 +44,8 @@ func NewChecklistController(router *gin.RouterGroup) *ChecklistController {
 // @Produce json
 // @Param page query int true "page"
 // @Param size query int true "size"
-// @Param order query string true "order"
-// @Param orderBy query string true "orderBy"
+// @Param order query string false "order"
+// @Param orderBy query string false "orderBy"
 // @Success 200 {object} object{data=[]model.Checklist_View,meta_data=model.MetadataResponse} "OK"
 // @Router /checklist [get]
 // @Security JWT
@@ -75,8 +75,8 @@ func (o *ChecklistController) GetAll(ctx *gin.Context) {
 // @Accept json
 // @Param page query int true "page"
 // @Param size query int true "size"
-// @Param order query string true "order"
-// @Param orderBy query string true "orderBy"
+// @Param order query string false "order"
+// @Param orderBy query string false "orderBy"
 // @Param checklistId path string true "ID"
 // @Produce json
 // @Success 200 {object} object{data=[]model.Checklist_View,meta_data=model.MetadataResponse} "OK"

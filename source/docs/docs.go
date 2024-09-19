@@ -50,15 +50,13 @@ const docTemplate = `{
                         "type": "string",
                         "description": "order",
                         "name": "order",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "string",
                         "description": "orderBy",
                         "name": "orderBy",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -238,15 +236,13 @@ const docTemplate = `{
                         "type": "string",
                         "description": "order",
                         "name": "order",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "string",
                         "description": "orderBy",
                         "name": "orderBy",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "string",
