@@ -266,6 +266,62 @@ const docTemplate = `{
                 }
             }
         },
+        "/checklist/{checklistId}/item/rename/{checklistitemId}": {
+            "put": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Checklist"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "checklistId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "checklistitemId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "PARAM",
+                        "name": "parameter",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CheklistItem_Update_status"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "meta_data": {
+                                    "$ref": "#/definitions/model.MetadataResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/checklist/{checklistId}/item/{checklistitemId}": {
             "get": {
                 "security": [
@@ -307,6 +363,60 @@ const docTemplate = `{
                                 "data": {
                                     "$ref": "#/definitions/model.Checklist_View"
                                 },
+                                "meta_data": {
+                                    "$ref": "#/definitions/model.MetadataResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Checklist"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "checklistId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "checklistitemId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "PARAM",
+                        "name": "parameter",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CheklistItem_Update_name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
                                 "meta_data": {
                                     "$ref": "#/definitions/model.MetadataResponse"
                                 }
@@ -773,17 +883,17 @@ const docTemplate = `{
         "model.ChecklistItem": {
             "type": "object",
             "properties": {
+                "Itemname": {
+                    "type": "string"
+                },
                 "checklist_id": {
                     "type": "string"
                 },
                 "description": {
                     "type": "string"
                 },
-                "name": {
-                    "type": "string"
-                },
                 "status": {
-                    "type": "string"
+                    "type": "boolean"
                 }
             }
         },
@@ -795,6 +905,22 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "model.CheklistItem_Update_name": {
+            "type": "object",
+            "properties": {
+                "Itemname": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CheklistItem_Update_status": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean"
                 }
             }
         },

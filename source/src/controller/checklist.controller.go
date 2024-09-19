@@ -31,8 +31,8 @@ func NewChecklistController(router *gin.RouterGroup) *ChecklistController {
 	checklist.GET("/:checklistId/item", o.GetAllChecklistItem)
 	checklist.GET("/:checklistId/item/:checklistitemId", o.GetOneCheckListItem)
 	checklist.POST("/:checklistId/item", o.AddCheckListItem)
-	checklist.PUT("/:checklistId/item/:checklistitemId", o.Add)
-	checklist.PUT("/:checklistId/item/rename/:checklistitemId", o.Add)
+	checklist.PUT("/:checklistId/item/:checklistitemId", o.UpdateNameItem)
+	checklist.PUT("/:checklistId/item/rename/:checklistitemId", o.UpdateStatusItem)
 	checklist.DELETE("/:checklistId/item/:checklistitemId", o.DeleteOneCheckListItem)
 
 	return o
@@ -124,7 +124,7 @@ func (o *ChecklistController) Add(ctx *gin.Context) {
 // @Accept json
 // @Param checklistId path string true "ID"
 // @Param checklistitemId path string true "ID"
-// @Param parameter body model.CheklistItem_Update_status true "PARAM"
+// @Param parameter body model.CheklistItem_Update_name true "PARAM"
 // @Produce json
 // @Success 201 {object} object{meta_data=model.MetadataResponse} "OK"
 // @Router /checklist/{checklistId}/item/{checklistitemId} [put]
@@ -133,11 +133,58 @@ func (o *ChecklistController) UpdateStatusItem(ctx *gin.Context) {
 	resp := model.Response{}
 	defer SetMetadataResponse(ctx, time.Now(), &resp)
 
+	var param model.CheklistItem_Update_name
+	// param.Status =
+
+	var upserData model.ChecklistItem
+	upserData.ItemName = param.Itemname
+
+	oldData, _ := o.checkListItemService.GetOne(ctx.Param("checklistId"), ctx.Param("checklistitemId"))
+	upserData.CheckListId = oldData.CheckListId
+	upserData.IdDocument = oldData.IdDocument
+	upserData.Description = oldData.Description
+	upserData.ItemName = oldData.ItemName
+	upserData.CreatedAt = oldData.CreatedAt
+	upserData.UpdatedAt = oldData.UpdatedAt
+
+	// upserData.CheckListId = oldData.
+
+	if err := ctx.BindJSON(&param); err != nil {
+		log.Println(err)
+		return
+	}
+
+	resp = o.checkListItemService.Upsert(upserData, false)
+}
+
+// @Tags Checklist
+// @Accept json
+// @Param checklistId path string true "ID"
+// @Param checklistitemId path string true "ID"
+// @Param parameter body model.CheklistItem_Update_status true "PARAM"
+// @Produce json
+// @Success 201 {object} object{meta_data=model.MetadataResponse} "OK"
+// @Router /checklist/{checklistId}/item/rename/{checklistitemId} [put]
+// @Security JWT
+func (o *ChecklistController) UpdateNameItem(ctx *gin.Context) {
+	resp := model.Response{}
+	defer SetMetadataResponse(ctx, time.Now(), &resp)
+
 	var param model.CheklistItem_Update_status
 	// param.Status =
 
 	var upserData model.ChecklistItem
 	upserData.Status = param.Status
+
+	oldData, _ := o.checkListItemService.GetOne(ctx.Param("checklistId"), ctx.Param("checklistitemId"))
+	upserData.CheckListId = oldData.CheckListId
+	upserData.IdDocument = oldData.IdDocument
+	upserData.Description = oldData.Description
+	upserData.ItemName = oldData.ItemName
+	upserData.CreatedAt = oldData.CreatedAt
+	upserData.UpdatedAt = oldData.UpdatedAt
+
+	// upserData.CheckListId = oldData.
 
 	if err := ctx.BindJSON(&param); err != nil {
 		log.Println(err)

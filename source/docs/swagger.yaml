@@ -15,14 +15,24 @@ definitions:
     type: object
   model.ChecklistItem:
     properties:
+      Itemname:
+        type: string
       checklist_id:
         type: string
       description:
         type: string
-      name:
-        type: string
       status:
+        type: boolean
+    type: object
+  model.CheklistItem_Update_name:
+    properties:
+      Itemname:
         type: string
+    type: object
+  model.CheklistItem_Update_status:
+    properties:
+      status:
+        type: boolean
     type: object
   model.EditProfile:
     properties:
@@ -316,6 +326,75 @@ paths:
             properties:
               data:
                 $ref: '#/definitions/model.Checklist_View'
+              meta_data:
+                $ref: '#/definitions/model.MetadataResponse'
+            type: object
+      security:
+      - JWT: []
+      tags:
+      - Checklist
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID
+        in: path
+        name: checklistId
+        required: true
+        type: string
+      - description: ID
+        in: path
+        name: checklistitemId
+        required: true
+        type: string
+      - description: PARAM
+        in: body
+        name: parameter
+        required: true
+        schema:
+          $ref: '#/definitions/model.CheklistItem_Update_name'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: OK
+          schema:
+            properties:
+              meta_data:
+                $ref: '#/definitions/model.MetadataResponse'
+            type: object
+      security:
+      - JWT: []
+      tags:
+      - Checklist
+  /checklist/{checklistId}/item/rename/{checklistitemId}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID
+        in: path
+        name: checklistId
+        required: true
+        type: string
+      - description: ID
+        in: path
+        name: checklistitemId
+        required: true
+        type: string
+      - description: PARAM
+        in: body
+        name: parameter
+        required: true
+        schema:
+          $ref: '#/definitions/model.CheklistItem_Update_status'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: OK
+          schema:
+            properties:
               meta_data:
                 $ref: '#/definitions/model.MetadataResponse'
             type: object

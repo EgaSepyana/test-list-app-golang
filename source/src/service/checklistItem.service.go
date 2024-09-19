@@ -52,7 +52,7 @@ func (s *ChecklistItemService) GetAll(param model.ChecklistItem_Search) (data []
 	return s.BaseGetAll(param, s.dbUtilView)
 }
 
-func (s *ChecklistItemService) GetOne(checklistId, checklistItemId string) (res model.Checklist_View, errMessage string) {
+func (s *ChecklistItemService) GetOne(checklistId, checklistItemId string) (res model.ChecklistItem_View, errMessage string) {
 	log.Println(aurora.Green(checklistItemId))
 	errMessage = OverrideError(s.dbUtilView.BaseFindOne(bson.M{"checklist_id": checklistId, "_id": checklistItemId}, &res))
 	return
