@@ -126,6 +126,27 @@ paths:
     get:
       consumes:
       - application/json
+      parameters:
+      - description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: size
+        in: query
+        name: size
+        required: true
+        type: integer
+      - description: order
+        in: query
+        name: order
+        required: true
+        type: string
+      - description: orderBy
+        in: query
+        name: orderBy
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -222,6 +243,26 @@ paths:
       consumes:
       - application/json
       parameters:
+      - description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: size
+        in: query
+        name: size
+        required: true
+        type: integer
+      - description: order
+        in: query
+        name: order
+        required: true
+        type: string
+      - description: orderBy
+        in: query
+        name: orderBy
+        required: true
+        type: string
       - description: ID
         in: path
         name: checklistId
@@ -352,7 +393,7 @@ paths:
         name: parameter
         required: true
         schema:
-          $ref: '#/definitions/model.CheklistItem_Update_name'
+          $ref: '#/definitions/model.CheklistItem_Update_status'
       produces:
       - application/json
       responses:
@@ -387,7 +428,7 @@ paths:
         name: parameter
         required: true
         schema:
-          $ref: '#/definitions/model.CheklistItem_Update_status'
+          $ref: '#/definitions/model.CheklistItem_Update_name'
       produces:
       - application/json
       responses:

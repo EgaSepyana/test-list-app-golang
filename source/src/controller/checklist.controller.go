@@ -2,6 +2,7 @@ package controller
 
 import (
 	"log"
+	"strconv"
 	"time"
 
 	"todolist-api/src/model"
@@ -31,8 +32,8 @@ func NewChecklistController(router *gin.RouterGroup) *ChecklistController {
 	checklist.GET("/:checklistId/item", o.GetAllChecklistItem)
 	checklist.GET("/:checklistId/item/:checklistitemId", o.GetOneCheckListItem)
 	checklist.POST("/:checklistId/item", o.AddCheckListItem)
-	checklist.PUT("/:checklistId/item/:checklistitemId", o.UpdateNameItem)
-	checklist.PUT("/:checklistId/item/rename/:checklistitemId", o.UpdateStatusItem)
+	checklist.PUT("/:checklistId/item/:checklistitemId", o.UpdateStatusItem)
+	checklist.PUT("/:checklistId/item/rename/:checklistitemId", o.UpdateNameItem)
 	checklist.DELETE("/:checklistId/item/:checklistitemId", o.DeleteOneCheckListItem)
 
 	return o
@@ -41,6 +42,10 @@ func NewChecklistController(router *gin.RouterGroup) *ChecklistController {
 // @Tags Checklist
 // @Accept json
 // @Produce json
+// @Param page query int true "page"
+// @Param size query int true "size"
+// @Param order query string true "order"
+// @Param orderBy query string true "orderBy"
 // @Success 200 {object} object{data=[]model.Checklist_View,meta_data=model.MetadataResponse} "OK"
 // @Router /checklist [get]
 // @Security JWT
@@ -50,11 +55,28 @@ func (o *ChecklistController) GetAll(ctx *gin.Context) {
 
 	param := model.Checklist_Search{}
 
+	page := ctx.Query("page")
+	size := ctx.Query("size")
+	order := ctx.Query("order")
+	orderBy := ctx.Query("orderBy")
+
+	PageAsInt, _ := strconv.Atoi(page)
+	SizeAsInt, _ := strconv.Atoi(size)
+
+	param.Page = int64(PageAsInt)
+	param.Size = int64(SizeAsInt)
+	param.Order = order
+	param.OrderBy = orderBy
+
 	resp.Data, resp.Metadata = o.service.GetAll(param)
 }
 
 // @Tags Checklist
 // @Accept json
+// @Param page query int true "page"
+// @Param size query int true "size"
+// @Param order query string true "order"
+// @Param orderBy query string true "orderBy"
 // @Param checklistId path string true "ID"
 // @Produce json
 // @Success 200 {object} object{data=[]model.Checklist_View,meta_data=model.MetadataResponse} "OK"
@@ -65,7 +87,20 @@ func (o *ChecklistController) GetAllChecklistItem(ctx *gin.Context) {
 	defer SetMetadataResponse(ctx, time.Now(), &resp)
 
 	param := model.ChecklistItem_Search{}
+
+	page := ctx.Query("page")
+	size := ctx.Query("size")
+	order := ctx.Query("order")
+	orderBy := ctx.Query("orderBy")
+
+	PageAsInt, _ := strconv.Atoi(page)
+	SizeAsInt, _ := strconv.Atoi(size)
+
 	param.CheckListId = ctx.Param("checklistId")
+	param.Page = int64(PageAsInt)
+	param.Size = int64(SizeAsInt)
+	param.Order = order
+	param.OrderBy = orderBy
 
 	resp.Data, resp.Metadata = o.checkListItemService.GetAll(param)
 }
@@ -127,9 +162,9 @@ func (o *ChecklistController) Add(ctx *gin.Context) {
 // @Param parameter body model.CheklistItem_Update_name true "PARAM"
 // @Produce json
 // @Success 201 {object} object{meta_data=model.MetadataResponse} "OK"
-// @Router /checklist/{checklistId}/item/{checklistitemId} [put]
+// @Router /checklist/{checklistId}/item/rename/{checklistitemId} [put]
 // @Security JWT
-func (o *ChecklistController) UpdateStatusItem(ctx *gin.Context) {
+func (o *ChecklistController) UpdateNameItem(ctx *gin.Context) {
 	resp := model.Response{}
 	defer SetMetadataResponse(ctx, time.Now(), &resp)
 
@@ -143,7 +178,6 @@ func (o *ChecklistController) UpdateStatusItem(ctx *gin.Context) {
 	upserData.CheckListId = oldData.CheckListId
 	upserData.IdDocument = oldData.IdDocument
 	upserData.Description = oldData.Description
-	upserData.ItemName = oldData.ItemName
 	upserData.CreatedAt = oldData.CreatedAt
 	upserData.UpdatedAt = oldData.UpdatedAt
 
@@ -154,7 +188,7 @@ func (o *ChecklistController) UpdateStatusItem(ctx *gin.Context) {
 		return
 	}
 
-	resp = o.checkListItemService.Upsert(upserData, false)
+	resp = o.checkListItemService.Upsert(upserData, true)
 }
 
 // @Tags Checklist
@@ -164,9 +198,9 @@ func (o *ChecklistController) UpdateStatusItem(ctx *gin.Context) {
 // @Param parameter body model.CheklistItem_Update_status true "PARAM"
 // @Produce json
 // @Success 201 {object} object{meta_data=model.MetadataResponse} "OK"
-// @Router /checklist/{checklistId}/item/rename/{checklistitemId} [put]
+// @Router /checklist/{checklistId}/item/{checklistitemId} [put]
 // @Security JWT
-func (o *ChecklistController) UpdateNameItem(ctx *gin.Context) {
+func (o *ChecklistController) UpdateStatusItem(ctx *gin.Context) {
 	resp := model.Response{}
 	defer SetMetadataResponse(ctx, time.Now(), &resp)
 
@@ -180,9 +214,9 @@ func (o *ChecklistController) UpdateNameItem(ctx *gin.Context) {
 	upserData.CheckListId = oldData.CheckListId
 	upserData.IdDocument = oldData.IdDocument
 	upserData.Description = oldData.Description
-	upserData.ItemName = oldData.ItemName
 	upserData.CreatedAt = oldData.CreatedAt
 	upserData.UpdatedAt = oldData.UpdatedAt
+	upserData.ItemName = oldData.ItemName
 
 	// upserData.CheckListId = oldData.
 
@@ -191,7 +225,7 @@ func (o *ChecklistController) UpdateNameItem(ctx *gin.Context) {
 		return
 	}
 
-	resp = o.checkListItemService.Upsert(upserData, false)
+	resp = o.checkListItemService.Upsert(upserData, true)
 }
 
 // @Tags Checklist
